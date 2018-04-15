@@ -12,6 +12,11 @@ npm start
 cd server
 ```
 
+deploy prisma Database :
+```
+yarn prisma deploy
+```
+
 build serverside and open playgorund: 
 
 ```
