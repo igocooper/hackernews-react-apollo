@@ -5,10 +5,21 @@ import gql from 'graphql-tag'
 import Link from './Link'
 
 class LinkList extends Component {
+    _updateCacheAfterVote = (store, createVote, linkId) => {
+        // 1
+        const data = store.readQuery({ query: FEED_QUERY })
+      
+        // 2
+        const votedLink = data.feed.links.find(link => link.id === linkId)
+        votedLink.votes = createVote.link.votes
+      
+        // 3
+        store.writeQuery({ query: FEED_QUERY, data })
+      }
 
-  render() {
+    render() {
     const { feedQuery } = this.props;
-    
+
     // wait for data to load
     if (feedQuery && feedQuery.loading) {
         return <div>Loading</div>
@@ -22,14 +33,22 @@ class LinkList extends Component {
     const linksToRender = this.props.feedQuery.feed.links
 
     return (
-    <ul>
-        {linksToRender.map(link => <li><Link key={link.id} link={link} /></li>)}
-    </ul>
+    <Fragment>
+        {linksToRender.map((link, index) => {
+            return <Link 
+                key={link.id} 
+                index={index} 
+                link={link} 
+                updateStoreAfterVote={this._updateCacheAfterVote}
+            />
+        })
+        }
+    </Fragment>
     )
-  }
+    }
 }
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
     query FeedQuery {
         feed {
             links {
@@ -37,6 +56,17 @@ const FEED_QUERY = gql`
                 createdAt
                 url
                 description
+                postedBy {
+                    id
+                    name
+                }
+                votes {
+                    id
+                    user {
+                        id
+                    }
+                }
+
             }
         }
     }
