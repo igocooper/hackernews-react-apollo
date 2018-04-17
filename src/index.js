@@ -7,9 +7,13 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
-// import { ApolloLink, from } from 'apollo-link';
-import { ApolloLink } from 'apollo-client-preset'
+
+import { ApolloLink ,split } from 'apollo-client-preset';
 import { HttpLink } from 'apollo-link-http';
+// subscription packages
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities'
+
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { AUTH_TOKEN } from './constants'
 
@@ -17,6 +21,7 @@ const httpLink = new HttpLink({
     uri: 'http://localhost:4000'
 });
 
+// implement authenication to get Token
 const middlewareAuthLink = new ApolloLink((operation, forward) => {
     const token = localStorage.getItem(AUTH_TOKEN)
     console.log(token);
@@ -31,9 +36,30 @@ const middlewareAuthLink = new ApolloLink((operation, forward) => {
   
 const httpLinkWithAuthToken = middlewareAuthLink.concat(httpLink)
 
+// implement graphql subscription via websocket
+const wsLink = new WebSocketLink({
+    uri: `ws://localhost:4000`,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        authToken: localStorage.getItem(AUTH_TOKEN),
+      }
+    }
+  })
+
+// manage roouting between protocols and concat final link to provide to Apollo client  
+const link = split(
+({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return kind === 'OperationDefinition' && operation === 'subscription'
+},
+wsLink,
+httpLinkWithAuthToken,
+)  
+
 const client = new ApolloClient({
-    link: middlewareAuthLink.concat(httpLink),
-    cache: new InMemoryCache()
+    link,
+    cache: new InMemoryCache({ addTypename: false })
 });
 
 ReactDOM.render(
