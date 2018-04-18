@@ -66,29 +66,29 @@ class LinkList extends Component {
         document: gql`
         subscription {
             newVote {
-            node {
-                id
-                link {
-                id
-                url
-                description
-                createdAt
-                postedBy {
+                node {
                     id
-                    name
-                }
-                votes {
-                    id
+                    link {
+                        id
+                        url
+                        description
+                        createdAt
+                        postedBy {
+                            id
+                            name
+                        }
+                        votes {
+                            id
+                            user {
+                            id
+                            }
+                        }
+                    }
                     user {
-                    id
+                        id
                     }
                 }
-                }
-                user {
-                id
-                }
-            }
-            }
+            }   
         }
         `,
     })
