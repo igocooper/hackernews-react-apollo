@@ -1,10 +1,4 @@
-Tutorial from HowToGraphQL
-
-## Client side :
-build frontend command : 
-```
-npm start
-```
+Tutorial from HowToGraphQL - Server side with Node.js
 
 ## Server side:
 
