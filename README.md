@@ -1,10 +1,15 @@
 Tutorial from HowToGraphQL - Server side with Node.js
 
 
-you should have grapql-cli installed to be able to run grapqhl commands 👍
+You should have grapql-cli  globally installed to be able to run grapqhl commands 👍
 
 ```
-sudon npm i -g graphql-cli
+sudo npm i -g graphql-cli
+```
+
+Also you need to have Prisma installed globally to be able to run prisma commands fron command line: 
+```
+sudo npm i -g prisma
 ```
 
 ## Server side:
