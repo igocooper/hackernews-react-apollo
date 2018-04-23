@@ -1,23 +1,21 @@
 Tutorial from HowToGraphQL - Server side with Node.js
 
-## Server side:
+
+you should have grapql-cli installed to be able to run grapqhl commands 👍
 
 ```
-cd server
+sudon npm i -g graphql-cli
 ```
+
+## Server side:
 
 deploy prisma Database :
 ```
-yarn prisma deploy
+npm prisma deploy
 ```
 
-build serverside and open playgorund: 
+open playgorund: 
 
 ```
-yarn dev
-```
-
-build serverside: 
-```
-yarn start
+graphql playground
 ```
